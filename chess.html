@@ -1,0 +1,315 @@
+<html>
+
+<body>
+    <script>
+        function init() {
+            drawBack();
+            White = new Player('white');
+            Black = new Player('black');
+            Control.refresh();
+        }
+
+        var Control = {
+            current: -1,
+            player: '',
+            turns: [],
+
+            next: function () {
+                const max = this.turns.length;
+
+                if (this.current < max) {
+                    this.current++;
+                    let set = this.turns[this.current];
+
+                    //for debug
+                    console.log("Previous Button"+"\nCurrent:"+this.current+
+                    "\nColor:" + set[0] + '\n Piece: ' + set[1] + 
+                        '\n Position Reference: ' + set[2] + 
+                        '\n X: ' + set[3] + '\n Y: ' + set[4]);
+
+                    if (set[0] == 'white') {
+                        White.move(set);
+                    } else if (set[0] == 'black') {
+                        Black.move(set)
+                    }
+                }
+            },
+
+            previous: function () {
+                if (this.current > 0) {
+                    this.current--;
+                    let set = this.turns[this.current];
+                    //for debug
+                    console.log("Previous Button"+"\nCurrent:"+this.current+
+                    "\nColor:" + set[0] + '\n Piece: ' + set[1] + 
+                        '\n Position Reference: ' + set[2] + 
+                        '\n X: ' + set[3] + '\n Y: ' + set[4]);
+                    
+                    //bug around here not refreshing previous move
+                    if (set[0] == 'white') {
+                        White.move(set);
+                    } else if (set[0] == 'black') {
+                        Black.move(set)
+                    }
+                }
+            },
+
+            getData: function (inData) {
+                this.turns = inData;
+                console.log(this.coords + " caught and stored");
+            },
+
+            refresh: function(){
+                drawBack();
+                White.draw();
+                Black.draw();
+            }
+        }
+
+        function drawBack() {
+            const wh = 100;//width & height
+            var x, y = 0;
+            var color1 = '#C7D2D9';
+            var color2 = '#2E3640';
+            currentColor = color2;
+            var flip = true;
+
+            for (x = 0; x < 8; x++) {
+                for (y = 0; y < 8; y++) {
+                    if (flip) {
+                        if (y % 2) {
+                            currentColor = color1
+                        } else {
+                            currentColor = color2
+                        }
+                    } else {
+                        if (y % 2) {
+                            currentColor = color2
+                        } else {
+                            currentColor = color1
+                        }
+                    }
+
+                    canCon.fillStyle = currentColor;
+                    canCon.fillRect(x * wh, y * wh, wh, wh);
+                }
+                if (x % 2) {
+                    flip = true;
+                } else {
+                    flip = false;
+                }
+            }
+        }
+
+        class Piece {
+            constructor(img, x, y) {
+                this.img = img;
+                this.x = x;
+                this.y = y;
+            }
+        }
+
+        class Player {
+            constructor(name) {
+                this.name = name;
+                this.PieceStack = [];
+                if (name == 'black') {
+                    this.PieceStack[0] = new Piece('P', 0, 100);
+                    this.PieceStack[1] = new Piece('P', 100, 100);
+                    this.PieceStack[2] = new Piece('P', 200, 100);
+                    this.PieceStack[3] = new Piece('P', 300, 100);
+                    this.PieceStack[4] = new Piece('P', 400, 100);
+                    this.PieceStack[5] = new Piece('P', 500, 100);
+                    this.PieceStack[6] = new Piece('P', 600, 100);
+                    this.PieceStack[7] = new Piece('P', 700, 100);
+                    this.PieceStack[8] = new Piece('R', 0, 0);
+                    this.PieceStack[9] = new Piece('N', 100, 0);
+                    this.PieceStack[10] = new Piece('B', 200, 0);
+                    this.PieceStack[11] = new Piece('Q', 300, 0);
+                    this.PieceStack[12] = new Piece('K', 400, 0);
+                    this.PieceStack[13] = new Piece('B', 500, 0);
+                    this.PieceStack[14] = new Piece('N', 600, 0);
+                    this.PieceStack[15] = new Piece('R', 700, 0);
+                }
+                if (name == 'white') {
+                    this.PieceStack[0] = new Piece('P', 0, 600);
+                    this.PieceStack[1] = new Piece('P', 100, 600);
+                    this.PieceStack[2] = new Piece('P', 200, 600);
+                    this.PieceStack[3] = new Piece('P', 300, 600);
+                    this.PieceStack[4] = new Piece('P', 400, 600);
+                    this.PieceStack[5] = new Piece('P', 500, 600);
+                    this.PieceStack[6] = new Piece('P', 600, 600);
+                    this.PieceStack[7] = new Piece('P', 700, 600);
+                    this.PieceStack[8] = new Piece('R', 0, 700);
+                    this.PieceStack[9] = new Piece('N', 100, 700);
+                    this.PieceStack[10] = new Piece('B', 200, 700);
+                    this.PieceStack[11] = new Piece('Q', 300, 700);
+                    this.PieceStack[12] = new Piece('K', 400, 700);
+                    this.PieceStack[13] = new Piece('B', 500, 700);
+                    this.PieceStack[14] = new Piece('N', 600, 700);
+                    this.PieceStack[15] = new Piece('R', 700, 700);
+                }
+            }
+            move(turn) {
+                //x=a-h,y=1-8
+                //move(player,piece,posRef, x, y)
+                let player = turn[0];
+                let piece = turn[1];
+                let posRef = turn[2];
+                let x = turn[3];
+                let y = turn[4];
+                var xMod = 0;
+                var yMod = 0;
+                var pieceIndex;
+
+                console.log('turn =' + turn);
+
+                switch(x){
+                    case 'a': xMod = 0; break;
+                    case 'b': xMod = 100; break;
+                    case 'c': xMod = 200; break;
+                    case 'd': xMod = 300; break;
+                    case 'e': xMod = 400; break;
+                    case 'f': xMod = 500; break;
+                    case 'g': xMod = 600; break;
+                    case 'h': xMod = 700; break;
+                }
+
+                switch(y){
+                    case 1: yMod = 700; break;
+                    case 2: yMod = 600; break;
+                    case 3: yMod = 500; break;
+                    case 4: yMod = 400; break;
+                    case 5: yMod = 300; break;
+                    case 6: yMod = 200; break;
+                    case 7: yMod = 100; break;
+                    case 8: yMod = 0; break;
+                }
+
+                switch (piece) {
+                    case 'P':
+                        switch(posRef){
+                            case 'a': pieceIndex = 0; break;
+                            case 'b': pieceIndex = 1; break;
+                            case 'c': pieceIndex = 2; break;
+                            case 'd': pieceIndex = 3; break;
+                            case 'e': pieceIndex = 4; break;
+                            case 'f': pieceIndex = 5; break;
+                            case 'g': pieceIndex = 6; break;
+                            case 'h': pieceIndex = 7; break;
+                        }
+                    break;
+                    case 'R':
+                        switch(posRef){
+                            case 'a': pieceIndex = 8; break;
+                            case 'h': pieceIndex = 15; break;
+                        }
+                    break;
+                    case 'N':
+                        switch(posRef){
+                            case 'b': pieceIndex = 9; break;
+                            case 'g': pieceIndex = 14; break;
+                        }
+                    break;
+                    case 'B':
+                        switch(posRef){
+                            case 'c': pieceIndex = 10; break;
+                            case 'f': pieceIndex = 13; break;
+                        }
+                    break;
+                    case 'K':
+                        pieceIndex = 11; break;
+                    break;
+                    case 'Q':
+                        pieceIndex = 12; break;
+                    break;
+                }
+
+                console.log("New x:" + xMod +"\nNew y:" + yMod);
+                this.PieceStack[pieceIndex].x = xMod;
+                this.PieceStack[pieceIndex].y = yMod;
+
+                Control.refresh();
+            }
+            draw() {
+                var pieces = this.PieceStack;
+                //Replace text with svgs of chess pieces
+                for (let i in pieces) {
+                    switch (pieces[i].img) {
+                        case 'P':
+                            canCon.fillStyle = this.name;
+                            canCon.font = "50px Arial";
+                            canCon.fillText("P", pieces[i].x, pieces[i].y + 50);
+                            break;
+                        case 'R':
+                            canCon.fillStyle = this.name;
+                            canCon.font = "50px Arial";
+                            canCon.fillText("R", pieces[i].x, pieces[i].y + 50);
+                            break;
+                        case 'N':
+                            canCon.fillStyle = this.name;
+                            canCon.font = "50px Arial";
+                            canCon.fillText("N", pieces[i].x, pieces[i].y + 50);
+                            break;
+                        case 'B':
+                            canCon.fillStyle = this.name;
+                            canCon.font = "50px Arial";
+                            canCon.fillText("B", pieces[i].x, pieces[i].y + 50);
+                            break;
+                        case 'Q':
+                            canCon.fillStyle = this.name;
+                            canCon.font = "50px Arial";
+                            canCon.fillText("Q", pieces[i].x, pieces[i].y + 50);
+                            break;
+                        case 'K':
+                            canCon.fillStyle = this.name;
+                            canCon.font = "50px Arial";
+                            canCon.fillText("K", pieces[i].x, pieces[i].y + 50);
+                            break;
+                    }
+                }
+            }
+
+        }
+
+    </script>
+
+    <style>
+        #gameCanvas {
+            border: solid 3px black;
+        }
+
+        .button-holder {
+            clear: both;
+        }
+
+        .img-invis {
+            display: none;
+        }
+    </style>
+
+    <canvas id="gameCanvas" width="800" height="800"></canvas>
+    <div class="button-holder">
+        <button onclick="Control.previous()">Previous</button>
+        <button onclick="Control.next()">Next</button>
+    </div>
+
+
+    <script>
+        var canvas = document.getElementById('gameCanvas');
+        var canCon = canvas.getContext("2d");
+        // Entry point for database integration
+        var inData = [
+            //Format -- playercolor, Piece, origin(a-g), x(a-g),y(1-8)
+            ['white', 'P','a','a', 3], ['black', 'P','e','e', 6],
+            ['white', 'P','b','b', 3], ['black', 'P','d','d', 5],
+            ['white', 'P','c','c', 4], ['black', 'P','f','f', 6],
+            ['white', 'P','d','d', 3], ['black', 'N','b','c', 6]
+        ];
+        Control.getData(inData);
+        init();
+    </script>
+
+</body>
+
+</html>
