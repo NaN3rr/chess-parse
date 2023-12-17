@@ -7,6 +7,7 @@
             White = new Player('white');
             Black = new Player('black');
             Control.refresh();
+            
         }
 
         var Control = {
@@ -233,40 +234,54 @@
             }
             draw() {
                 var pieces = this.PieceStack;
+                var imgToDraw;
                 //Replace text with svgs of chess pieces
                 for (let i in pieces) {
                     switch (pieces[i].img) {
                         case 'P':
-                            canCon.fillStyle = this.name;
-                            canCon.font = "50px Arial";
-                            canCon.fillText("P", pieces[i].x, pieces[i].y + 50);
+                            if(this.name == 'white'){
+                                imgToDraw = document.getElementById('img-w-pawn');
+                            }else if(this.name == 'black'){
+                                imgToDraw = document.getElementById('img-b-pawn');
+                            }
                             break;
                         case 'R':
-                            canCon.fillStyle = this.name;
-                            canCon.font = "50px Arial";
-                            canCon.fillText("R", pieces[i].x, pieces[i].y + 50);
+                            if(this.name == 'white'){
+                                imgToDraw = document.getElementById('img-w-rook');
+                            }else if(this.name == 'black'){
+                                imgToDraw = document.getElementById('img-b-rook');
+                            }
                             break;
                         case 'N':
-                            canCon.fillStyle = this.name;
-                            canCon.font = "50px Arial";
-                            canCon.fillText("N", pieces[i].x, pieces[i].y + 50);
+                            if(this.name == 'white'){
+                                imgToDraw = document.getElementById('img-w-knight');
+                            }else if(this.name == 'black'){
+                                imgToDraw = document.getElementById('img-b-knight');
+                            }
                             break;
                         case 'B':
-                            canCon.fillStyle = this.name;
-                            canCon.font = "50px Arial";
-                            canCon.fillText("B", pieces[i].x, pieces[i].y + 50);
+                            if(this.name == 'white'){
+                                imgToDraw = document.getElementById('img-w-bishop');
+                            }else if(this.name == 'black'){
+                                imgToDraw = document.getElementById('img-b-bishop');
+                            }
                             break;
                         case 'Q':
-                            canCon.fillStyle = this.name;
-                            canCon.font = "50px Arial";
-                            canCon.fillText("Q", pieces[i].x, pieces[i].y + 50);
+                            if(this.name == 'white'){
+                                imgToDraw = document.getElementById('img-w-queen');
+                            }else if(this.name == 'black'){
+                                imgToDraw = document.getElementById('img-b-queen');
+                            }
                             break;
                         case 'K':
-                            canCon.fillStyle = this.name;
-                            canCon.font = "50px Arial";
-                            canCon.fillText("K", pieces[i].x, pieces[i].y + 50);
+                            if(this.name == 'white'){
+                                imgToDraw = document.getElementById('img-w-king');
+                            }else if(this.name == 'black'){
+                                imgToDraw = document.getElementById('img-b-king');
+                            }
                             break;
                     }
+                    canCon.drawImage(imgToDraw,pieces[i].x, pieces[i].y,100,100);
                 }
             }
 
@@ -288,6 +303,23 @@
         }
     </style>
 
+
+    <img class= 'img-invis' id = 'img-w-pawn' src = 'chess_set/wPawn.svg'>
+    <img class= 'img-invis' id = 'img-w-rook' src = 'chess_set/wRook.svg'>
+    <img class= 'img-invis' id = 'img-w-knight' src = 'chess_set/wKnight.svg'>
+    <img class= 'img-invis' id = 'img-w-bishop' src = 'chess_set/wBishop.svg'>
+    <img class= 'img-invis' id = 'img-w-queen' src = 'chess_set/wQueen.svg'>
+    <img class= 'img-invis' id = 'img-w-king' src = 'chess_set/wKing.svg'>
+
+    <img class= 'img-invis' id = 'img-b-pawn' src = 'chess_set/bPawn.svg'>
+    <img class= 'img-invis' id = 'img-b-rook' src = 'chess_set/bRook.svg'>
+    <img class= 'img-invis' id = 'img-b-knight' src = 'chess_set/bKnight.svg'>
+    <img class= 'img-invis' id = 'img-b-bishop' src = 'chess_set/bBishop.svg'>
+    <img class= 'img-invis' id = 'img-b-queen' src = 'chess_set/bQueen.svg'>
+    <img class= 'img-invis' id = 'img-b-king' src = 'chess_set/bKing.svg'>
+
+
+
     <canvas id="gameCanvas" width="800" height="800"></canvas>
     <div class="button-holder">
         <button onclick="Control.previous()">Previous</button>
@@ -299,6 +331,7 @@
         var canvas = document.getElementById('gameCanvas');
         var canCon = canvas.getContext("2d");
         // Entry point for database integration
+        
         var inData = [
             //Format -- playercolor, Piece, origin(a-g), x(a-g),y(1-8)
             ['white', 'P','a','a', 3], ['black', 'P','e','e', 6],
